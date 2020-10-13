@@ -143,6 +143,7 @@ new : old = 1 : 2 (Java 1.8)
        
        RSet = RememberedSet。每一个Region里面都有一个HashSet，记录着其他的Region中的对象到本Region中的引用，也是帮助垃圾回收使用的。
        是的垃圾回收器不需要扫描整个堆找到谁引用了当前分区中的对象，只需要扫描RSet即可。RSet把对方的引用记在其中，不需要扫描其他各个Region了。
+       这是G1高效回收的关键！
    
 9. ZGC (1ms) PK C++， zero stw
    算法：ColoredPointers + LoadBarrier ColoredPointers：64位（无压缩）指针中有三个bit标识这个指针的指向有没有变化过，垃圾回收的时候
