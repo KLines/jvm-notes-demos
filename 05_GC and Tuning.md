@@ -131,7 +131,9 @@ new : old = 1 : 2 (Java 1.8)
        代的那个对象又指向了年轻代的某个对象，怎么才能确定年轻代的某个对象是活着的？找年轻代的可达对象居然要遍历整个老年代，这是很恐怖的一件事，
        就算做一次YGC，也要扫描整个Old区。于是在JVM内部就做了这么一件事：把内存的区域分成一个个的Card，就像操作系统里的一个个内存的page。
        Old区也是一个个的Card，对象就存在一个个Card里面，如果有一个Card里面的一个对象指回了年轻代，不管是年轻代的哪一个对象，就把这个Card
-       标记为`Dirty`，说明这里面的有对象指向了年轻代，具体用位图表示各个Card是不是Dirty。Card Table以一堆0和1记录哪些是Dirty的Card。
+       标记为`Dirty`，说明这里面的有对象指向了年轻代，具体用位图表示各个Card是不是Dirty。Card Table以一堆0和1记录哪些是Dirty的Card，
+       哪些位上是1就其找那张脏Card。Young区card不用标记，全扫描就行了。找到脏Card里面的对象，指回Y区，然后不要回收那些Y区有被O区对象引用的。
+       
    CSet = Collection Set
    
 9. ZGC (1ms) PK C++， zero stw
