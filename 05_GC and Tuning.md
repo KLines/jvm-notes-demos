@@ -140,6 +140,9 @@ new : old = 1 : 2 (Java 1.8)
        一组可被回收的分区的集合。哪些个Card可以被回收，装到一个表格里，这个表格叫做Collection Set，到回收的阶段的时候，找那些对象可以被回收，
        就去CSet里面找。在CSet中存活的数据会在GC过程中被移动到另一个分区，CSet中的分区可以来自Eden、Survivior或者Old。CSet会占用不到整
        个堆空间的1%大小。
+       
+       RSet = RememberedSet。每一个Region里面都有一个HashSet，记录着其他的Region中的对象到本Region中的引用，也是帮助垃圾回收使用的。
+       是的垃圾回收器不需要扫描整个堆找到谁引用了当前分区中的对象，只需要扫描RSet即可。
    
 9. ZGC (1ms) PK C++， zero stw
    算法：ColoredPointers + LoadBarrier ColoredPointers：64位（无压缩）指针中有三个bit标识这个指针的指向有没有变化过，垃圾回收的时候
