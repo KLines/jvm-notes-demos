@@ -135,7 +135,8 @@ new : old = 1 : 2 (Java 1.8)
        哪些位上是1就其找那张脏Card。Young区card不用标记，全扫描就行了。找到脏Card里面的对象，指回Y区，然后不要回收那些Y区有被O区对象引用的。
        
    CSet = Collection Set
-   一组可被回收的分区的集合
+   一组可被回收的分区的集合。在CSet中存活的数据会在GC过程中被移动到另一个分区，CSet中的分区可以来自Eden、Suvivior或者Old。
+   CSet会占用不到整个堆空间的1%大小
    
 9. ZGC (1ms) PK C++， zero stw
    算法：ColoredPointers + LoadBarrier ColoredPointers：64位（无压缩）指针中有三个bit标识这个指针的指向有没有变化过，垃圾回收的时候
