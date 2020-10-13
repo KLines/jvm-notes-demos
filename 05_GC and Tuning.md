@@ -143,7 +143,11 @@ new : old = 1 : 2 (Java 1.8)
        
        RSet = RememberedSet。每一个Region里面都有一个HashSet，记录着其他的Region中的对象到本Region中的引用，也是帮助垃圾回收使用的。
        是的垃圾回收器不需要扫描整个堆找到谁引用了当前分区中的对象，只需要扫描RSet即可。RSet把对方的引用记在其中，不需要扫描其他各个Region了。
-       这是G1高效回收的关键！
+       这是G1高效回收的关键！跟 Card Table 的区别：Card Table是单独的一张表，记录各个Card是不是Dirty，进入Dirty的Card之后，只是知道
+       这个Card里面有指向Y区的引用，但是不知道引用是哪一个对象的，所以还得扫描。但是有了这个RSet之后，他里面就记录着当前Region的对象被
+       那些对象引用着，很精确地知道，如果发现某个对象不在RSet中，可以把它直接回收掉。而且RSet是"三色算法"实现的关键。缺点是占的空间会更多，
+       10%。所以之后的ZGC就不要RSet了，由于它使用了颜色指针，他把这个信息记录在这个引用本身（3位）里面了，所以在ZGC里面，Eden、Old等区就
+       都没了。以后ZGC调优，10几个参数就足够了。
    
 9. ZGC (1ms) PK C++， zero stw
    算法：ColoredPointers + LoadBarrier ColoredPointers：64位（无压缩）指针中有三个bit标识这个指针的指向有没有变化过，垃圾回收的时候
