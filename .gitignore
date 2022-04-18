@@ -1,0 +1,37 @@
+.class
+target/
+
+# Eclipse
+bin/
+.classpath
+.project
+.settings/
+.metadata/
+.recommenders/
+src/main/webapp/META-INF/
+
+# MyEclipse
+WebRoot/WEB-INF/classes/
+.mymetadata
+
+# Intellij
+.idea/
+*.iml
+*.log
+*.ipr
+*.iws
+rebel.xml
+venv/
+
+# Mac
+.DS_Store
+
+# SVN
+.svn/
+
+# Maven
+log/
+.mvn/
+
+# TestNG
+test-output/
